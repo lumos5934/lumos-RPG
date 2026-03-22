@@ -1,0 +1,19 @@
+{
+    "name": "LumosLib.RPG.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:516a456569bf1c849883dabc043be0fc",
+        "GUID:12bbdf6a2886c1b4a8d13d6a164f242a"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

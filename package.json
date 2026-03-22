@@ -1,0 +1,14 @@
+{
+  "name": "com.lumos.rpg",
+  "version": "1.0.0",
+  "displayName": "Lumos RPG",
+  "description": "description",
+  "unity": "2021.2",
+  "author": {
+    "name": "Lumos",
+    "email": "lumos5934@gmail.com",
+    "url": ""
+  },
+  "dependencies": {
+  }
+}
