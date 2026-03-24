@@ -95,7 +95,7 @@ handler.RemoveAllFromSource(sword);
 
 ---
 
-### Vtial
+### Vital
 
 <table>
   <tr>
