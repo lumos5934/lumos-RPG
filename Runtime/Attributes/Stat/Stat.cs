@@ -55,7 +55,7 @@ namespace LumosLib.RPG
 		}
 		
 		
-		public void Add(StatModifier mod)
+		public void AddModifier(StatModifier mod)
 		{
 			_modifiers.Add(mod);
 			_isDirty = true;
@@ -64,7 +64,7 @@ namespace LumosLib.RPG
 		}
 
 		
-		public bool Remove(StatModifier mod)
+		public bool RemoveModifier(StatModifier mod)
 		{
 			if (_modifiers.Remove(mod))
 			{

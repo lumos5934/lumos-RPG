@@ -29,24 +29,56 @@ namespace LumosLib.RPG
             return _stats.GetValueOrDefault(id);
         }
 
-        
-        public void Add(int id, StatModifier modifier)
+
+        public float GetValue(int id)
         {
             var stat = Get(id);
             if (stat == null)
-                return;
-            
-            stat.Add(modifier);
+                return 0;
+
+            return stat.Value;
+        }
+
+
+        public float GetBaseValue(int id)
+        {
+            var stat = Get(id);
+            if (stat == null)
+                return 0;
+
+            return stat.BaseValue;
+        }
+
+
+        public IReadOnlyList<StatModifier> GetModifiers(int id)
+        {
+            var stat = Get(id);
+
+            return stat?.Modifiers;
         }
         
         
-        public void Remove(int id, StatModifier modifier)
+        public void SetBaseValue(int id, float value)
         {
             var stat = Get(id);
-            if (stat == null)
-                return;
-            
-            stat.Remove(modifier);
+
+            stat?.SetBaseValue(value);
+        }
+        
+        
+        public void AddModifier(int id, StatModifier modifier)
+        {
+            var stat = Get(id);
+
+            stat?.AddModifier(modifier);
+        }
+        
+        
+        public void RemoveModifier(int id, StatModifier modifier)
+        {
+            var stat = Get(id);
+
+            stat?.RemoveModifier(modifier);
         }
 
         
