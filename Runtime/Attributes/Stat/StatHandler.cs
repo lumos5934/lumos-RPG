@@ -11,30 +11,22 @@ namespace LumosLib.RPG
             _stats = new();
         }
 
-
-        public void Register(int id, Stat stat)
-        {
-            _stats.TryAdd(id, stat);
-        }
-
-
-        public void Unregister(int id)
-        {
-            _stats.Remove(id);
-        }
-
         
         public Stat Get(int id)
         {
-            return _stats.GetValueOrDefault(id);
+            if (!_stats.TryGetValue(id, out var stat))
+            {
+                stat = new Stat(); 
+                _stats.Add(id, stat);
+            }
+            
+            return stat;
         }
 
 
         public float GetValue(int id)
         {
             var stat = Get(id);
-            if (stat == null)
-                return 0;
 
             return stat.Value;
         }
@@ -43,8 +35,6 @@ namespace LumosLib.RPG
         public float GetBaseValue(int id)
         {
             var stat = Get(id);
-            if (stat == null)
-                return 0;
 
             return stat.BaseValue;
         }
