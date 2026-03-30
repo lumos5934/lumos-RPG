@@ -6,79 +6,87 @@ namespace LumosLib.RPG
     {
         private static List<IUnitEffectModifier> _modifiers = new();
         private static List<IUnitEffectFeedback> _feedbacks = new();
-        private static Stack<UnitEffectContext> _contextPool = new();
-
         
-        public static UnitEffectContext GetContext(IUnit source, IUnit target, List<UnitEffect> effects)
+        
+        public static void Apply(IUnitEffectAction action)
         {
-            var ctx = _contextPool.Count > 0 ? _contextPool.Pop() : new UnitEffectContext();
-            ctx.Reset();
-            ctx.Source = source;
-            ctx.Target = target;
-            ctx.Effects = new List<UnitEffect>(effects);
-            
-            return ctx;
-        }
-        
-        
-        public static void Apply(UnitEffectContext ctx)
-        {
-            var source = ctx.Source;
-            var target = ctx.Target;
-            
-            if (source == null || 
-                target == null) 
-                return;
-
-            
-            foreach (var modifier in _modifiers)
+            if (action == null || 
+                action.Target == null || 
+                action.Source == null)
             {
-                modifier.Modify(ctx);
+                DebugUtil.LogWarning($"{action?.GetType().Name} : Missing Target or Source", "UnitEffectSystem");
+                return;
             }
             
             
-            var vitals =  target.Vitals;
-            
-            foreach (var effect in ctx.Effects)
+            foreach (var modifier in _modifiers)
             {
-                var vital = vitals.Get(effect.VitalTypeID);
-                if (vital != null)
+                modifier.Modify(action);
+            }
+
+
+            PayCosts(action);
+            
+            ApplyEffect(action);
+            
+            
+            foreach (var feedback in _feedbacks)
+            {
+                feedback.Apply(action);
+            }
+        }
+
+        
+        public static void AddModifier(IUnitEffectModifier modifier)
+        {
+            _modifiers.Add(modifier);
+            _modifiers.Sort((a, b) => a.Order.CompareTo(b.Order));
+        }
+        
+        
+        public static void AddFeedback(IUnitEffectFeedback feedback)
+        {
+            _feedbacks.Add(feedback);
+            _feedbacks.Sort((a, b) => a.Order.CompareTo(b.Order));
+        }
+        
+        
+        private static void PayCosts(IUnitEffectAction action)
+        {
+            var sourceVitals = action.Source.Vitals;
+
+            foreach (var cost in action.Costs)
+            {
+                var vital = sourceVitals.Get(cost.VitalTypeID);
+                vital?.Apply(-cost.Value);
+            }
+        }
+
+
+        private static void ApplyEffect(IUnitEffectAction action)
+        {
+            var targetVitals = action.Target.Vitals;
+            var effects = action.Effects;
+            
+            for (int i = 0; i < effects.Count; i++)
+            {
+                var effect = effects[i];
+                
+                var targetVital = targetVitals.Get(effect.VitalTypeID);
+                if (targetVital != null)
                 {
                     var value = effect.Value;
 
-                    if (effect.IsNegative)
+                    if (effect.IsHarmful)
                     {
                         value *= -1f;
                     }
                     
-                    vitals.Apply(effect.VitalTypeID, value);
+                    targetVital.Apply(value);
                 }
             }
             
-            
-            ctx.Target.OnApplyEffect(ctx);
-            
-            foreach (var feedback in _feedbacks)
-            {
-                feedback.Apply(ctx);
-            }
-            
-            ctx.Reset();
-            _contextPool.Push(ctx);
-        }
-
-        
-        public static void RegisterModifier(IUnitEffectModifier modifier)
-        {
-            _modifiers.Add(modifier);
-            _modifiers.Sort((a, b) => a.Priority.CompareTo(b.Priority));
-        }
-        
-        
-        public static void RegisterFeedback(IUnitEffectFeedback feedback)
-        {
-            _feedbacks.Add(feedback);
-            _feedbacks.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+            action.Target.OnApplyEffect(action);
         }
     }
 }

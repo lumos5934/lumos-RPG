@@ -2,7 +2,7 @@
 {
     public interface IUnitEffectModifier
     {
-        int Priority { get; }
-        void Modify(UnitEffectContext ctx);
+        int Order { get; }
+        void Modify(IUnitEffectAction action);
     }
 }

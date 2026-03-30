@@ -2,7 +2,7 @@
 {
     public interface IUnitEffectFeedback
     {
-        int Priority { get; }
-        void Apply(UnitEffectContext ctx);
+        int Order { get; }
+        void Apply(IUnitEffectAction action);
     }
 }

@@ -6,7 +6,7 @@
         public int AttributeFlags;    //Normal, Fire ...
         public int VitalTypeID;      //Health ..
         public int SourceID;        //Weapon ..
-        public bool IsNegative;
+        public bool IsHarmful;
         public float Value;
     }
 }

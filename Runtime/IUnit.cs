@@ -5,7 +5,7 @@
         StatHandler Stats { get; }
         StateHandler States { get; }
         VitalHandler Vitals { get; }
-        void OnApplyEffect(UnitEffectContext ctx);
+        void OnApplyEffect(IUnitEffectAction action);
     }
 }
 
