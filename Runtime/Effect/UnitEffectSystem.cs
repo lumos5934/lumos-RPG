@@ -55,6 +55,9 @@ namespace LumosLib.RPG
         {
             var sourceVitals = action.Source.Vitals;
 
+            if (action.Costs == null)
+                return;
+
             foreach (var cost in action.Costs)
             {
                 var vital = sourceVitals.Get(cost.VitalTypeID);
@@ -66,7 +69,10 @@ namespace LumosLib.RPG
         private static void ApplyEffect(IUnitEffectAction action)
         {
             var targetVitals = action.Target.Vitals;
+            
             var effects = action.Effects;
+            if (effects == null)
+                return;
             
             for (int i = 0; i < effects.Count; i++)
             {
