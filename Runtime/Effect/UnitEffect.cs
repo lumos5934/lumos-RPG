@@ -11,7 +11,7 @@ namespace LumosLib.RPG
         
         public int MethodFlags;     //Direct, Dot ...
         public int AttributeFlags;    //Normal, Fire ...
-        public bool IsHarmful;
+        public bool IsPositive;
         
         
         public float BaseValue;
@@ -31,7 +31,7 @@ namespace LumosLib.RPG
             get
             {
                 float value = (BaseValue + AdditionalValue) * FinalMultiplier;
-                return IsHarmful ? value * -1f : value;
+                return IsPositive ? value : value * -1f;
             }
         }
         
@@ -42,7 +42,7 @@ namespace LumosLib.RPG
             this.AttributeFlags = origin.AttributeFlags;
             this.TargetVitalID = origin.TargetVitalID;
             this.TargetStatID = origin.TargetStatID;
-            this.IsHarmful = origin.IsHarmful;
+            this.IsPositive = origin.IsPositive;
             this.FinalMultiplier = origin.FinalMultiplier;
             this.BaseValue = origin.BaseValue;
             this.Duration = origin.Duration;
@@ -59,7 +59,7 @@ namespace LumosLib.RPG
             AttributeFlags = 0;
             TargetVitalID = 0;
             TargetStatID = 0;
-            IsHarmful = false;
+            IsPositive = false;
             FinalMultiplier = 1f;
             BaseValue = 0;
             Duration = 0;
