@@ -44,14 +44,16 @@ namespace LumosLib.RPG
 
 
                 var targetVitals = context.Target.Vitals;
+                var targetStats = context.Target.Stats;
         
                 foreach (var effect in context.Effects)
                 {
-                    if (effect.BaseValue == 0f) 
-                        continue;
-            
-                    var targetVital = targetVitals.Get(effect.VitalTypeID);
+                    var targetVital = targetVitals.Get(effect.TargetVitalID);
                     targetVital?.Apply(effect.FinalValue);
+                    
+                    
+                    var targetStat = targetStats.Get(effect.TargetStatID);
+                    targetStat?.SetBaseValue(effect.FinalValue);
                 }
 
                 context.Target.OnApplyEffect(context);

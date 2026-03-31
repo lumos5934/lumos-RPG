@@ -1,24 +1,36 @@
-﻿namespace LumosLib.RPG
+﻿using System.Collections.Generic;
+
+namespace LumosLib.RPG
 {
     [System.Serializable]
     public class UnitEffect
     {
+        public int TargetVitalID;      //Health ..
+        public int TargetStatID;      //Health ..
+        
+        
         public int MethodFlags;     //Direct, Dot ...
         public int AttributeFlags;    //Normal, Fire ...
-        public int VitalTypeID;      //Health ..
-        public int SourceID;        //Weapon ..
-        
         public bool IsHarmful;
-        public float Multiplier = 1f; 
+        
+        
         public float BaseValue;
+        public float AdditionalValue;
+        public float FinalMultiplier = 1f; 
+       
+        
         public float Duration;
         public float TickInterval;
 
+        
+        public List<EffectFactor> Factors = new();
+        
+        
         public float FinalValue
         {
             get
             {
-                float value = BaseValue * Multiplier;
+                float value = (BaseValue + AdditionalValue) * FinalMultiplier;
                 return IsHarmful ? value * -1f : value;
             }
         }
@@ -28,13 +40,16 @@
         {
             this.MethodFlags =  origin.MethodFlags;
             this.AttributeFlags = origin.AttributeFlags;
-            this.VitalTypeID = origin.VitalTypeID;
-            this.SourceID = origin.SourceID;
+            this.TargetVitalID = origin.TargetVitalID;
+            this.TargetStatID = origin.TargetStatID;
             this.IsHarmful = origin.IsHarmful;
-            this.Multiplier = origin.Multiplier;
+            this.FinalMultiplier = origin.FinalMultiplier;
             this.BaseValue = origin.BaseValue;
             this.Duration = origin.Duration;
             this.TickInterval = origin.TickInterval;
+            
+            this.Factors.Clear();
+            this.Factors.AddRange(origin.Factors);
         }
         
         
@@ -42,13 +57,14 @@
         {
             MethodFlags = 0;
             AttributeFlags = 0;
-            VitalTypeID = 0;
-            SourceID = 0;
+            TargetVitalID = 0;
+            TargetStatID = 0;
             IsHarmful = false;
-            Multiplier = 1f;
+            FinalMultiplier = 1f;
             BaseValue = 0;
             Duration = 0;
             TickInterval = 0;
+            Factors.Clear();
         }
       
     }
