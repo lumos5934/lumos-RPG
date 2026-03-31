@@ -3,6 +3,6 @@
     public interface IUnitEffectModifier
     {
         int Order { get; }
-        void Modify(IUnitEffectAction action);
+        void Modify(UnitEffectContext context);
     }
 }
