@@ -48,13 +48,13 @@ namespace LumosLib.RPG
         
                 foreach (var effect in context.Effects)
                 {
-                    if (effect.TargetVitalID >= 0)
+                    if (effect.TargetVitalID > 0)
                     {
                         var targetVital = targetVitals.Get(effect.TargetVitalID);
                         targetVital?.Apply(effect.FinalValue);
                     }
 
-                    if (effect.TargetStatID >= 0)
+                    if (effect.TargetStatID > 0)
                     {
                         var targetStat = targetStats.Get(effect.TargetStatID);
                         targetStat?.SetBaseValue(effect.FinalValue);
