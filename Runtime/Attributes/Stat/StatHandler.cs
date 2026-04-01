@@ -4,23 +4,32 @@ namespace LumosLib.RPG
 {
     public class StatHandler
     {
-        private Dictionary<int, Stat> _stats;
+        private Dictionary<int, Stat> _statsById;
+        private List<Stat> _stats;
         
         public StatHandler()
         {
+            _statsById = new();
             _stats = new();
         }
 
         
         public Stat Get(int id)
         {
-            if (!_stats.TryGetValue(id, out var stat))
+            if (!_statsById.TryGetValue(id, out var stat))
             {
                 stat = new Stat(); 
-                _stats.Add(id, stat);
+                _statsById.Add(id, stat);
+                _stats.Add(stat);
             }
             
             return stat;
+        }
+
+
+        public IEnumerable<Stat> GetAll()
+        {
+            return _stats;
         }
 
 
@@ -74,7 +83,7 @@ namespace LumosLib.RPG
         
         public void RemoveAllFromSource(object source)
         {
-            foreach (var stat in _stats.Values)
+            foreach (var stat in _statsById.Values)
             {
                 stat.RemoveAllFromSource(source);
             }
