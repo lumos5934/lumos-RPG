@@ -5,18 +5,20 @@ namespace LumosLib.RPG
 {
     public class Vital
     {
+        private int _id;
         private float _current;
         private readonly Stat _maxStat;
 
         public event Action<float, float> OnValueChanged;
         public event Action OnEmpty;
-        
+
+        public int ID => _id;
         public float Current => _current;
         public float Max => _maxStat.Value;
         public float Ratio => Mathf.Clamp01(_current / Max);
 
         
-        public Vital(Stat maxStat)
+        public Vital(int id, Stat maxStat)
         {
             _maxStat = maxStat;
             _maxStat.OnValueChanged += OnMaxStatChanged;

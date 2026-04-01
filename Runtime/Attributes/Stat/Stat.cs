@@ -5,6 +5,7 @@ namespace LumosLib.RPG
 {
 	public class Stat
 	{
+		private int _id;
 		private bool _isDirty = true;
 		private float _baseValue;
 		private float _value;
@@ -16,6 +17,7 @@ namespace LumosLib.RPG
 
 	    public event Action<float> OnValueChanged;
 		
+		public int ID => _id;
 		public IReadOnlyList<StatModifier> Modifiers => _modifiers;
 		public float BaseValue => _baseValue;
 		public float Value
@@ -32,15 +34,17 @@ namespace LumosLib.RPG
 		}
 
 		
-		public Stat()
+		public Stat(int id)
 		{
+			_id = id;
+			
 			_modifiers = new List<StatModifier>();
 			_comparison = GetModSortOrder;
 			_predicate = modifier => modifier.Source == _sourceToRemove;
 		}
 
 		
-		public Stat(float baseValue) : this()
+		public Stat(int id, float baseValue) : this(id)
 		{
 			SetBaseValue(baseValue);
 		}

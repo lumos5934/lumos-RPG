@@ -18,7 +18,7 @@ namespace LumosLib.RPG
         {
             if (!_statsById.TryGetValue(id, out var stat))
             {
-                stat = new Stat(); 
+                stat = new Stat(id); 
                 _statsById.Add(id, stat);
                 _stats.Add(stat);
             }

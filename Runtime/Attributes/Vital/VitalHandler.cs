@@ -12,9 +12,9 @@ namespace LumosLib.RPG
         }
 
         
-        public void Register(int id, Vital vital)
+        public void Register(Vital vital)
         {
-            _vitals.TryAdd(id, vital);
+            _vitals.TryAdd(vital.ID, vital);
         }
         
         
