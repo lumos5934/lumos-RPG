@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LumosLib.RPG
+namespace LLib.RPG
 {
     [System.Serializable]
     public class UnitEffect

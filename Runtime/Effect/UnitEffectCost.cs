@@ -1,4 +1,4 @@
-﻿namespace LumosLib.RPG
+﻿namespace LLib.RPG
 {
     public struct UnitEffectCost
     {

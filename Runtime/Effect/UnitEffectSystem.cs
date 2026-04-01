@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LumosLib.RPG
+namespace LLib.RPG
 {
     public static class UnitEffectSystem
     {

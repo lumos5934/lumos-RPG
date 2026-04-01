@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace LumosLib.RPG
+namespace LLib.RPG
 {
     public class StateHandler
     {

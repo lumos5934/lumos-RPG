@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LumosLib.RPG
+namespace LLib.RPG
 {
     public sealed class UnitEffectContext
     {

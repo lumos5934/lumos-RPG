@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace LumosLib.RPG
+namespace LLib.RPG
 {
     public class Vital
     {

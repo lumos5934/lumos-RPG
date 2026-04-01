@@ -1,6 +1,6 @@
 using System;
 
-namespace LumosLib.RPG
+namespace LLib.RPG
 {
     public enum StatModType
     {

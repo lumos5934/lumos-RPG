@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LumosLib.RPG
+namespace LLib.RPG
 {
     internal static class UnitEffectPool
     {

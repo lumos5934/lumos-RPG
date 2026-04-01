@@ -1,4 +1,4 @@
-﻿namespace LumosLib.RPG
+﻿namespace LLib.RPG
 {
     [System.Serializable]
     public struct EffectFactor

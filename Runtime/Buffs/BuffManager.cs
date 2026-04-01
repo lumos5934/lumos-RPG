@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace LumosLib.RPG
+namespace LLib.RPG
 {
     public class BuffManager : MonoBehaviour
     {
