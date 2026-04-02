@@ -12,9 +12,15 @@ namespace LLib.RPG
         }
 
         
-        public void Register(StatResource statResource)
+        public void Register(StatResource resource)
         {
-            _resources.TryAdd(statResource.ID, statResource);
+            _resources.TryAdd(resource.ID, resource);
+        }
+
+
+        public void Unregister(StatResource resource)
+        {
+            Unregister(resource.ID);
         }
         
         
