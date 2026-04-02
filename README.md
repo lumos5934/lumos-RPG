@@ -14,7 +14,7 @@ RPG 게임에 자주 사용되는 코드 패키지
 ## ℹ️기능
 
 * [Stat](#Stat)
-* [Vital](#Vital)
+* [StatResource](#StatResource)
 * [UnitEffect](#UnitEffect)
 * [Buff](#Buff)
 
@@ -95,57 +95,56 @@ handler.RemoveAllFromSource(sword);
 
 ---
 
-### Vital
+### StatResource
 
 <table>
   <tr>
-    <td><b>Vital<b></td>
+    <td><b>StatResource<b></td>
       <td>단일 자원(HP 등)의 현재치(Current)를 관리하며, 최대치와의 비율(Ratio)을 제공</td>
   </tr>
         <tr>
-    <td><b>VitalHandler<b></td>
-      <td>여러 개의 Vital을 ID 기반으로 관리하고, 특정 자원에 수치를 적용(Apply)하거나 초기화하는 기능</td>
+    <td><b>StatResourceHandler<b></td>
+      <td>여러 개의 StatResource를 ID 기반으로 관리하고, 특정 자원에 수치를 적용(Apply)하거나 초기화하는 기능</td>
   </tr>
 </table>
 
 <br>
 
-Vital은 Stat 객체를 참조하며, 참조 중인 Stat의 Value가 변경되면 Vital은 이벤트를 수신하여 자신의 최대치를 갱신. 최대치가 줄어들어 현재치가 최대치를 초과하게 되면, 자동으로 현재치를 새 최대치에 맞춰 조절.
+StatResource은 Stat 객체를 참조하며, 참조 중인 Stat의 Value가 변경되면 StatResource은 이벤트를 수신하여 자신의 최대치를 갱신. 최대치가 줄어들어 현재치가 최대치를 초과하게 되면, 자동으로 현재치를 새 최대치에 맞춰 조절.
 
 <br>
 
-**Vital 생성**
+**StatResource 생성**
 
 ```cs
 
 // 1. 최대 HP가 될 Stat 생성
 var hpMaxStat = new Stat(100f);
 
-// 2. Stat을 기반으로 Vital 생성
-var hpVital = new Vital(hpMaxStat);
+// 2. Stat을 기반으로 Resource 생성
+var hpResource = new StatResource(hpMaxStat);
 
 // 3. 이벤트 구독
-hpVital.OnValueChanged += (cur, max) => Debug.Log($"HP 변경: {cur} / {max}");
-hpVital.OnEmpty += () => Debug.Log("캐릭터 사망!");
+hpResource.OnValueChanged += (cur, max) => Debug.Log($"HP 변경: {cur} / {max}");
+hpResource.OnEmpty += () => Debug.Log("캐릭터 사망!");
 
 // 데미지 입힘 (-20)
-hpVital.Apply(-20f); 
+hpResource.Apply(-20f); 
 
 // 아이템 장착으로 최대 HP Stat이 150으로 증가하면?
-hpMaxStat.SetBaseValue(150f); // Vital의 Max도 자동으로 150으로 인지함
+hpMaxStat.SetBaseValue(150f); // Resource의 Max도 자동으로 150으로 인지함
 
 ```
 
 <br>
 
-**VitalHandler**
+**StatResourceHandler**
 
 ```cs
 
-VitalHandler handler = new VitalHandler();
+StatResourceHandler handler = new StatResourceHandler();
 
-// ID 1번에 HP 등록
-handler.Register(1, new Vital(new Stat(100f)));
+handler.Register(new StatResource(new Stat(100f)));
 
 // 포션 사용 (ID 1번 자원을 50 회복)
 handler.Apply(1, 50f);
@@ -178,10 +177,6 @@ handler.SetFull(1);  // 최대치로
       <td>Apply 직전에 수치를 변경하는 로직</td>
   </tr>
       <tr>
-    <td><b>IUnitEffectFeedback<b></td>
-      <td>수치가 적용된 후 실행되는 연출 로직</td>
-  </tr>
-      <tr>
     <td><b>UnitEffectSystem<b></td>
       <td>위 구성 요소들을 조합하여 프로세스를 실행하고 Context 객체를 풀링 관리</td>
   </tr>
@@ -193,16 +188,17 @@ handler.SetFull(1);  // 최대치로
 
 **Flow**
 
-1.`UnitEffectContext`를 생성하여 공격자, 대상, 효과 목록을 관리
-2.등록된 `IUnitEffectModifier`들을 실행
-3.최종 계산된 수치가 대상의 Vital 시스템에 반영
-4.등록된 IUnitEffectFeedback이 실행
+1. `UnitEffect` 를 생성.
+2. `UnitEffectSystem.Apply(Action<UnitEffectContext> onSetup)` 을 호출.
+3. onSetup 콜백을 통해 내용을 채우고 호출.
+4. 등록된 `IUnitEffectModifier` 들을 실행
+5. 최종 계산된 수치가 대상의 Stat, Resource 에 반영
 
 
 <br>
 <br>
 
-**Modifier와 Feedback 등록**
+**Modifier 등록**
 
 ```cs
 
@@ -213,7 +209,7 @@ public class DefenseModifier : IUnitEffectModifier
     {
         foreach (var effect in ctx.Effects)
         {
-            if (effect.IsNegative) 
+            if (!effect.IsPositive) 
                 effect.Value -= ctx.Target.Defense; // 단순화된 예시
         }
     }
@@ -231,20 +227,25 @@ UnitEffectSystem.RegisterModifier(new DefenseModifier());
 
 // 1. 효과 데이터 준비
 var damageEffect = new UnitEffect {
-    VitalTypeID = 1, // HP
+    TargetResourceID = 1, // HP
     Value = 50f,
-    IsNegative = true,
     AttributeFlags = (int)Element.Fire
 };
 
-// 2. 컨텍스트 생성 및 실행
-var effects = new List<UnitEffect> { damageEffect };
-var ctx = UnitEffectSystem.GetContext(attacker, target, effects);
+// 2. 실행
+UnitEffectSystem.Apply(ctx =>
+{
+  ctx.Source = this;
+  ctx.Target = target;
+  ctx.SetEffects(damageEffect);
+  ctx.HitPoint = target.transform.position;
+});
 
-ctx.HitPoint = target.transform.position;
-UnitEffectSystem.Apply(ctx); // 이 시점에 Modifier -> Vital 반영 -> Feedback 순차 실행
+// 이 시점에 Modifier -> Unit 반영
+// context 나 effect 는 클래스 이기 때문에 풀링을 사용하기 위해 직접 생성하기보단 주입하면 복사되는 방식.
 
 ```
+
 
 <br>
 <br>
@@ -289,7 +290,6 @@ public class PoisonBuff : BaseBuff
     protected override void OnTick()
     {
         // 1초마다 타겟에게 데미지 적용 (UnitEffectSystem 연동 가능)
-        var context = UnitEffectSystem.GetContext(null, Target, Effects);
         UnitEffectSystem.Apply(context);
     }
 
