@@ -5,8 +5,8 @@ namespace LLib.RPG
     [System.Serializable]
     public class UnitEffect
     {
-        public int TargetVitalID;      //Health ..
         public int TargetStatID;      //Health ..
+        public int TargetResourceID;      //Health ..
         
         
         public int MethodFlags;     //Direct, Dot ...
@@ -40,8 +40,8 @@ namespace LLib.RPG
         {
             this.MethodFlags =  origin.MethodFlags;
             this.AttributeFlags = origin.AttributeFlags;
-            this.TargetVitalID = origin.TargetVitalID;
-            this.TargetStatID = origin.TargetStatID;
+            this.TargetResourceID = origin.TargetResourceID;
+            this.TargetStatID = origin.TargetStatID;    
             this.IsPositive = origin.IsPositive;
             this.FinalMultiplier = origin.FinalMultiplier;
             this.BaseValue = origin.BaseValue;
@@ -57,7 +57,7 @@ namespace LLib.RPG
         {
             MethodFlags = 0;
             AttributeFlags = 0;
-            TargetVitalID = 0;
+            TargetResourceID = 0;
             TargetStatID = 0;
             IsPositive = false;
             FinalMultiplier = 1f;

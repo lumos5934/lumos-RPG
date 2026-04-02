@@ -43,21 +43,21 @@ namespace LLib.RPG
                 }
 
 
-                var targetVitals = context.Target.Vitals;
                 var targetStats = context.Target.Stats;
+                var targetResources = context.Target.Resources;
         
                 foreach (var effect in context.Effects)
                 {
-                    if (effect.TargetVitalID > 0)
+                    if (effect.TargetResourceID > 0)
                     {
-                        var targetVital = targetVitals.Get(effect.TargetVitalID);
-                        targetVital?.Apply(effect.FinalValue);
+                        var resource = targetResources.Get(effect.TargetResourceID);
+                        resource?.Apply(effect.FinalValue);
                     }
 
                     if (effect.TargetStatID > 0)
                     {
-                        var targetStat = targetStats.Get(effect.TargetStatID);
-                        targetStat?.SetBaseValue(effect.FinalValue);
+                        var stat = targetStats.Get(effect.TargetStatID);
+                        stat?.SetBaseValue(effect.FinalValue);
                     }
                 }
 

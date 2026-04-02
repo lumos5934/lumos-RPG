@@ -3,35 +3,38 @@ using UnityEngine;
 
 namespace LLib.RPG
 {
-    public class Vital
+    public class StatResource
     {
-        private int _id;
+        private readonly int _id;
+        private readonly Stat _refStat;
+        
         private float _current;
-        private readonly Stat _maxStat;
 
         public event Action<float, float> OnValueChanged;
         public event Action OnEmpty;
 
         public int ID => _id;
         public float Current => _current;
-        public float Max => _maxStat.Value;
+        public float Max => _refStat.Value;
         public float Ratio => Mathf.Clamp01(_current / Max);
 
         
-        public Vital(int id, Stat maxStat)
+        public StatResource(Stat refStat)
         {
-            _maxStat = maxStat;
-            _maxStat.OnValueChanged += OnMaxStatChanged;
+            _id = refStat.ID;
             
-            _current = maxStat.Value;
+            _refStat = refStat;
+            _refStat.OnValueChanged += OnRefStatChanged;
+            
+            _current = refStat.Value;
         }
 
 
         public void Dispose()
         {
-            if (_maxStat != null)
+            if (_refStat != null)
             {
-                _maxStat.OnValueChanged -= OnMaxStatChanged;
+                _refStat.OnValueChanged -= OnRefStatChanged;
             }
         }
         
@@ -73,7 +76,7 @@ namespace LLib.RPG
         }
 
 
-        protected virtual void OnMaxStatChanged(float max)
+        protected virtual void OnRefStatChanged(float max)
         {
             _current = Math.Min(_current, max);
 

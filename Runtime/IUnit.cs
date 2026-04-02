@@ -3,8 +3,8 @@
     public interface IUnit
     {
         StatHandler Stats { get; }
+        StatResourceHandler Resources { get; }
         StateHandler States { get; }
-        VitalHandler Vitals { get; }
         void OnApplyEffect(UnitEffectContext context);
     }
 }

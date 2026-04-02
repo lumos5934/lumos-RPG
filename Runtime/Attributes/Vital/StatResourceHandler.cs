@@ -2,19 +2,19 @@ using System.Collections.Generic;
 
 namespace LLib.RPG
 {
-    public class VitalHandler
+    public class StatResourceHandler
     {
-        private Dictionary<int, Vital> _vitals;
+        private Dictionary<int, StatResource> _resources;
         
-        public VitalHandler()
+        public StatResourceHandler()
         {
-            _vitals = new();
+            _resources = new();
         }
 
         
-        public void Register(Vital vital)
+        public void Register(StatResource statResource)
         {
-            _vitals.TryAdd(vital.ID, vital);
+            _resources.TryAdd(statResource.ID, statResource);
         }
         
         
@@ -24,14 +24,14 @@ namespace LLib.RPG
             if (contains != null)
             {
                 contains.Dispose();
-                _vitals.Remove(id);
+                _resources.Remove(id);
             }
         }
         
         
-        public Vital Get(int id)
+        public StatResource Get(int id)
         {
-            return _vitals.GetValueOrDefault(id);
+            return _resources.GetValueOrDefault(id);
         }
 
 
@@ -67,22 +67,22 @@ namespace LLib.RPG
         
         public void Apply(int id, float amount)
         {
-            var vital = Get(id);
-            vital?.Apply(amount); 
+            var resource = Get(id);
+            resource?.Apply(amount); 
         }
 
 
         public void SetEmpty(int id)
         {
-            var vital = Get(id);
-            vital?.SetEmpty();
+            var resource = Get(id);
+            resource?.SetEmpty();
         }
 
 
         public void SetFull(int id)
         {
-            var vital = Get(id);
-            vital?.SetFull();
+            var resource = Get(id);
+            resource?.SetFull();
         }
     }
 }
